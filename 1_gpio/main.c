@@ -3,6 +3,8 @@
 #define GPIO ((NRF_GPIO_REGS*)0x50000000)
 //Hei på deg T-bone
 //kommentar fra torsteoe
+//min endring på branch torsteoe-mac
+
 typedef struct {
 	volatile uint32_t RESERVED0[321];
 	volatile uint32_t OUT;
