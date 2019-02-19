@@ -6,7 +6,7 @@
 //min endring på branch torsteoe-mac
 //Workin my own branch over here! Wohoo!
 typedef struct {
-	volatile uint32_t RESERVED0[321];
+	volatile uint32_t RESERVED0[321];	//321 ord av størrelsen 32 bit
 	volatile uint32_t OUT;
 	volatile uint32_t OUTSET;
 	volatile uint32_t OUTCLR;
