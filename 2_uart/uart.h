@@ -5,10 +5,10 @@ typedef struct {
 	//Task
 	volatile uint32_t STARTRX;
 	volatile uint32_t STOPRX;
-	volatile uint32_t STARTTX
+	volatile uint32_t STARTTX;
 	volatile uint32_t STOPTX;
 	volatile uint32_t reserved_0[3];
-	volatile uint32_t SUSPEND; 
+	volatile uint32_t SUSPEND;
 	//Events
 	volatile uint32_t reserved_1[56];
 	volatile uint32_t CTS;
@@ -20,7 +20,7 @@ typedef struct {
 	volatile uint32_t ERROR;
 	volatile uint32_t reserved_4[7];
 	volatile uint32_t RXTO;
-	
+
 	volatile uint32_t reserved_5[110];
 	//Registers
 	volatile uint32_t INTEN;
@@ -50,5 +50,4 @@ typedef struct {
 
 void uart_init();
 void uart_send(char letter);
-void uart_read();
-
+char uart_read();

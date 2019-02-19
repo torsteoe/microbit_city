@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include "uart.h"
 
 #define GPIO ((NRF_GPIO_REGS*)0x50000000)
 //Hei på deg T-bone
@@ -30,6 +31,12 @@ int main(){
 	GPIO->PIN_CNF[26] = 0;
 
 	int sleep = 0;
+
+	uart_init();
+
+
+
+
 	while(1){
 
 
@@ -37,25 +44,27 @@ int main(){
 		if (!((GPIO->IN) & (1<<26))) { //hvis knapp b er trykket inn
 
 			for(int i = 4; i <= 12; i++){
-				
+
 				GPIO->OUTCLR = (1 << i);
 			}
 			for (int i = 13; i<=15; i++) {
 				GPIO->OUTSET = (1<< i);
 			}
+			uart_send('B');
 		}
 		if (!((GPIO->IN) & (1<<17))) {
 
 
 			for(int i = 4; i <= 12; i++){ // hvis knapp a er trykket inn.
-				
+
 				GPIO->OUTSET = (1 << i);
 			}
 			for (int i = 13; i<=15; i++) {
 				GPIO->OUTCLR = (1<< i);
 			}
+			uart_send('A');
 		}
-		
+
 		/* Check if button B is pressed;
 		 * turn on LED matrix if it is. */
 
