@@ -13,14 +13,14 @@ void twi_test() {
 
 	//kjør twi_multi_read
 	twi_multi_read(
-		/* slave address*/ ACCEL_ADDR,
+		/* slave address*/ (uint8_t)0x01D,
 		/* start_register*/(uint8_t)0x0D,
 		/*num of registers*/ 1,
 		/*skriver til: */ data_buffer
 	);
 
 
-	if (*data_buffer == 0x5A) {
+	if (data_buffer[0] == 0x5A) {
 
 
 

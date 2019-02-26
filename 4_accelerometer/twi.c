@@ -9,7 +9,7 @@ void twi_init() {
 
 	//aktivere twi-modul på nRF med riktige signalliner
 
-	TWI0->PSELSCL = 1;
+	TWI0->PSELSCL = 0;
 	TWI0->PSELSDA = 30;
 
 	TWI0->ENABLE = 5;
@@ -18,6 +18,9 @@ void twi_init() {
 	//GPIO->PIN_CNF[0] = (0);
 	GPIO->PIN_CNF[0] = (6 << 8);
 	GPIO->PIN_CNF[30] = (6 << 8);
+
+	GPIO->DIRCLR |= (1<<30);
+	GPIO->DIRCLR |= (1);
 
 
 	//sette 100kbps overføringshastighet
