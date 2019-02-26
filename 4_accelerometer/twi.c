@@ -12,6 +12,8 @@ void twi_init() {
 	TWI0->PSELSCL = 1;
 	TWI0->PSELSDA = 30;
 
+	TWI0->ENABLE = 5;
+
 	//config gpio-pins:
 	//GPIO->PIN_CNF[0] = (0);
 	GPIO->PIN_CNF[0] = (6 << 8);
@@ -57,6 +59,7 @@ void twi_multi_read(
 	ubit_led_matrix_init();
 	ubit_led_matrix_light_only_at(3,3);
 
+
 	TWI0->TXDSENT = 0;
 
 
@@ -78,6 +81,7 @@ void twi_multi_read(
 		//TWI0->RESUME = 1;
 
 	}
+
 
 
 

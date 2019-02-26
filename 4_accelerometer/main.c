@@ -14,7 +14,7 @@ void twi_test() {
 	//kjør twi_multi_read
 	twi_multi_read(
 		/* slave address*/ ACCEL_ADDR,
-		/* start_register*/0x0D,
+		/* start_register*/(uint8_t)0x0D,
 		/*num of registers*/ 1,
 		/*skriver til: */ data_buffer
 	);
