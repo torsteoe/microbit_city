@@ -31,14 +31,37 @@ uint32_t bluetooth_gap_advertise_start(){
 
 	static uint8_t adv_data[] = {
 		// Add some stuff
+		7, BLE_GAP_AD_TYPE_COMPLETE_LOCAL_NAME,
+		'h', 'e', 'i', 'h', 'e', 'i',
+		3, BLE_GAP_AD_TYPE_16BIT_SERVICE_UUID_COMPLETE,
+		0x0D, 0xF0
+
+
 	};
-	uint8_t adv_data_length = 0;
+	uint8_t adv_data_length =12;
+
+	//Setter data i pakken.
+	sd_ble_gap_adv_data_set(adv_data, adv_data_length, NULL, 0);
+
 
 	// Add more stuff
+	ble_gap_adv_params_t adv_params;
+	memset(&adv_params, 0, sizeof(adv_params));
+
+
+	//endre variablene her
+	adv_params.type = BLE_GAP_ADV_TYPE_ADV_IND;
+	adv_params.interval = BLE_GAP_ADV_INTERVAL_MIN; //50/0.625ms
+
+	//sending
+	sd_ble_gap_adv_start(&adv_params);
+
+
+
 
 	// Remove these lines when doing the GAP exercise
-	(void)adv_data;
-	(void)adv_data_length;
+	//(void)adv_data;
+	//(void)adv_data_length;
 
 	return err_code;
 }
