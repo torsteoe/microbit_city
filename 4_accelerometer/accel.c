@@ -2,14 +2,10 @@
 #include "accel.h"
 #include "twi.h"
 
-#define ACCEL_ADDR			____
-#define ACCEL_DATA_REG		____
-#define ACCEL_CTRL_REG_1	____
-#define ACCEL_200_HZ_ON		0x11
 
 void accel_init(){
-	uint8_t data = ACCEL_200_HZ_ON;
-	twi_multi_write(ACCEL_ADDR, ACCEL_CTRL_REG_1, 1, &data);
+	//uint8_t data = ACCEL_200_HZ_ON;
+	//twi_multi_write(ACCEL_ADDR, ACCEL_CTRL_REG_1, 1, &data);
 }
 
 void accel_read_x_y_z(int * data_buffer){

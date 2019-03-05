@@ -1,6 +1,7 @@
 #define TWI0 ((NRF_TWI_REG*)0x40003000)
 #include <stdint.h>
-
+#include "gpio.h"
+#include "ubit_led_matrix.h"
 
 typedef struct {
 	volatile uint32_t STARTRX;
