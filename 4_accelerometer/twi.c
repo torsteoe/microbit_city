@@ -49,24 +49,20 @@ void twi_multi_read(
 	/*4. Når dere har fått ACK tilbake fra slaven (som betyr at en TXDSENT-
 	hendelse er blitt generert), starter dere en leseoperasjon uten å stoppe
 	bussen. Dette kalles en repeated start sequence.
-	*/
-
-
-
-//KOMMER LYS FØR WHILE-LØKKEN, MEN IKKE ETTER.
-//Vi får ikke satt TXDSENT til noe, og den blir ikke 1.
+	*///TWI0->TXDSENT = 0;
 
 	while (!(TWI0->TXDSENT)) {
 
 	}
-	ubit_led_matrix_init();
-	ubit_led_matrix_light_only_at(3,3);
 
 
+	TWI0->RXDREADY = 0;
 	TWI0->TXDSENT = 0;
 
 
-
+	for (int i = 0; i<10; i++) {
+		__asm("nop");
+	}
 
 
 	TWI0->STARTRX = 1;
@@ -108,4 +104,34 @@ void twi_multi_read(
 	//TWI0->STOP = 0;
 
 	data_buffer[registers_to_read-1] = TWI0->RXD;
+}
+
+void twi_multi_write(
+	uint8_t slave_address,
+	uint8_t start_register,
+	int registers_to_write,
+	uint8_t * data_buffer
+) {
+
+	//sett addresseregisteret
+	TWI0->ADDRESS = slave_address;
+
+	//start skriveoperasjon
+	TWI0->STARTTX = 1;
+
+
+	TWI0->TXDSENT = 0;
+	TWI0->TXD = start_register;
+	while (!TWI0->TXDSENT) { }
+
+
+	//skriv registers_to_write antall byte til buss
+	for (int i = 0; i<registers_to_write; i++) {
+
+		TWI0->TXDSENT = 0;
+		TWI0->TXD = data_buffer[i];
+		while (!TWI0->TXDSENT);
+	}
+	TWI0->STOP = 1;
+
 }
