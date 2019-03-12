@@ -1,0 +1,5 @@
+{
+    "files.associations": {
+        "ubit_led_matrix.h": "c"
+    }
+}

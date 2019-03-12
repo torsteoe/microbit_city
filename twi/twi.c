@@ -49,17 +49,44 @@ typedef struct {
 
 void twi_init(){
 
-    /* Your task: */
+    /* Your task: 
 
-    /* 1) To use TWI, you must configure the SDA- and SCL lines in */
-    /*    the GPIO module. Read the TWI section in the nRF51822 */
-    /*    datasheet to determine which direction the pins should */
-    /*    have, as well as what drive strength you should apply. */
+     1) To use TWI, you must configure the SDA- and SCL lines in 
+        the GPIO module. Read the TWI section in the nRF51822 
+        datasheet to determine which direction the pins should 
+        have, as well as what drive strength you should apply. 
 
-    /* 2) Use pin 0 on the micro:bit as SCL; 30 as SDA. */
+     2) Use pin 0 on the micro:bit as SCL; 30 as SDA. 
 
-    /* 3) Use normal I2C speed, i.e. 100 kHz operation. */
+     3) Use normal I2C speed, i.e. 100 kHz operation. */
 
+	//Disable spi, som deler adresse med accelerometer
+
+	//volatile uint32_t * ptr = (uint32_t*)(0x40003500);
+	//*ptr = 0;
+
+	//Konfigurerer GPIO pins på nRF
+	GPIO->PIN_CNF[0] = (6 << 8) | (3<<2);
+	GPIO->PIN_CNF[30] = (6 << 8) | (3<<2);
+
+	//Setter 100kBps overføringshastighet
+	TWI0->FREQUENCY = 0x01980000;
+	TWI0->RXDREADY = 0;
+	TWI0->TXDSENT = 0;
+	TWI0->ERROR = 0;
+
+	//Aktiverer TWI-modulen på nRF med riktige signallinjer
+	TWI0->PSELSCL = 0;
+	TWI0->PSELSDA = 30;
+	TWI0->ENABLE = 5;
+	
+	
+
+
+	//GPIO->DIRCLR |= (1 << 30);
+	//GPIO->DIRCLR |= (1);
+
+	
 }
 
 void twi_multi_read(
@@ -69,33 +96,49 @@ void twi_multi_read(
 		uint8_t * data_buffer
 		){
 
-    /* Your task: */
+    /* Your task: 
 
-    /* 1) Write the register address you want to the slave */
-    /*    device. Busy-wait until the register address has */
-    /*    been sent by the TWI peripheral. */
+     1) Write the register address you want to the slave 
+        device. Busy-wait until the register address has 
+        been sent by the TWI peripheral. */
+	
+	TWI0->ADDRESS = slave_address; 
+	TWI0->STARTTX = 1;				//Starter en skriveoperasjon
+	TWI0->TXDSENT = 0;
+	TWI0->TXD = start_register;		//sender adressen til startregisteret
 
+	while(!(TWI0->TXDSENT));		//"Repeated start sequence" - etter å ha skrevet startadressen leser vi uten å stoppe buss. 
 
+	TWI0->RXDREADY = 0;				//Usikker på om dette er nødvendig
+	TWI0->TXDSENT = 0;
 
-    /* As explained in the guidance lecture, these "no-operation" */
-    /* instructions are necessary because of a timing issue between */
-    /* nRF51822 and the LSM303AGR. The reason we use inline assembly */
-    /* is to always force the compiler to keep these instructions, */
-    /* regardless of optimization level. */
-    for(int i = 0; i < 10; i++){
+	int i;
+    for(i = 0; i < 10; i++){
         __asm("nop");
     }
 
-    /* Your task: */
+    /* Your task: 
 
-    /* 1) Read back the register that you asked the slave to */
-    /*    supply. This amounts to generating a repeated start */
-    /*    condition, and reading the amount of registers you */
-    /*    want. */
+     1) Read back the register that you asked the slave to 
+        supply. This amounts to generating a repeated start 
+        condition, and reading the amount of registers you 
+        want. 
 
-    /* 2) Remember that you need to generate a NACK at */
-    /*    the of the sequence, read the TWI section to figure */
-    /*    out how to do this. */
+     2) Remember that you need to generate a NACK at 
+        the of the sequence, read the TWI section to figure 
+        out how to do this. */
+
+	TWI0->STARTRX = 1; //starter en leseoperasjon, leser alle utenom den siste
+	int j;
+	for (j = 0; j < registers_to_read-1; j++){
+		while(!(TWI0->RXDREADY));
+		TWI0->RXDREADY = 0;
+		data_buffer[j] = TWI0->RXD;
+	}
+
+	TWI0->STOP = 1;	//Forteller at vi nå skal lese den siste, og leser så den siste
+	while(!(TWI0->RXDREADY));
+	data_buffer[registers_to_read-1] = TWI0->RXD;
 
 }
 
@@ -112,7 +155,8 @@ void twi_multi_write(
 	TWI0->TXD = start_register;
 	while(!TWI0->TXDSENT);
 
-	for(int i = 0; i < registers_to_write; i++){
+	int i;
+	for(i = 0; i < registers_to_write; i++){
 		TWI0->TXDSENT = 0;
 		TWI0->TXD = data_buffer[i];
 		while(!TWI0->TXDSENT);

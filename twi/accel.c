@@ -2,10 +2,10 @@
 #include "accel.h"
 #include "twi.h"
 
-#define ACCEL_ADDR          __FILL_THIS_OUT_
-#define ACCEL_DATA_REG      __FILL_THIS_OUT_
-#define ACCEL_CTRL_REG_1    __FILL_THIS_OUT_
-#define ACCEL_CTRL_REG_4    __FILL_THIS_OUT_
+#define ACCEL_ADDR          (uint8_t)(0x19)
+#define ACCEL_DATA_REG      (uint8_t)(0x28)
+#define ACCEL_CTRL_REG_1    (uint8_t)(0x20)
+#define ACCEL_CTRL_REG_4    (uint8_t)(0x23)
 
 #define ACCEL_100_HZ_HR_ON  0x57
 #define ACCEL_HR_SELECT     0x08
@@ -32,6 +32,11 @@ void accel_read_x_y_z(int * p_data_buffer){
     /*    You do not need to apply any transformations to */
     /*    the data that you read; this is already done */
     /*    below. */
+
+    uint8_t wut = (10000000 | ACCEL_DATA_REG);  //for å skru på autoinkrement, som vi trenger i lesingen
+
+    twi_multi_read(ACCEL_ADDR, wut, 6, raw_data);
+    
 
     int16_t x_accel, y_accel, z_accel;
 
