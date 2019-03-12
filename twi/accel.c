@@ -33,7 +33,7 @@ void accel_read_x_y_z(int * p_data_buffer){
     /*    the data that you read; this is already done */
     /*    below. */
 
-    uint8_t wut = (10000000 | ACCEL_DATA_REG);  //for å skru på autoinkrement, som vi trenger i lesingen
+    uint8_t wut = (10000000 | ACCEL_DATA_REG);  //for å skru på autoinkrement, som vi trenger i lesingen 6.1.1, avsnitt 3
 
     twi_multi_read(ACCEL_ADDR, wut, 6, raw_data);
     
