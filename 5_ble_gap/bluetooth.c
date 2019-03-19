@@ -31,6 +31,7 @@ uint32_t bluetooth_gap_advertise_start(){
 
 	static uint8_t adv_data[] = {
 		// Add some stuff
+
 		7, BLE_GAP_AD_TYPE_COMPLETE_LOCAL_NAME,
 		'h', 'e', 'i', 'h', 'e', 'i',
 		3, BLE_GAP_AD_TYPE_16BIT_SERVICE_UUID_COMPLETE,
@@ -62,6 +63,7 @@ uint32_t bluetooth_gap_advertise_start(){
 	// Remove these lines when doing the GAP exercise
 	//(void)adv_data;
 	//(void)adv_data_length;
+
 
 	return err_code;
 }
